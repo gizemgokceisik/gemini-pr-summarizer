@@ -1,0 +1,73 @@
+PR #,Original PR Title,Generated PR Title,Original PR Summary,Generated PR Summary
+32797,CI Run unit-tests with random seed on schedule and open automated issue,Add scheduled and manual unit test runs with random seed and failure tracking,"
+<!--
+🙌 Thanks for contributing a pull request!
+
+👀 Please ensure you have taken a look at the contribution guidelines:
+https://github.com/scikit-learn/scikit-learn/blob/main/CONTRIBUTING.md
+
+✅ In particular following the pull request checklist will increase the likelihood
+of having maintainers review your PR:
+https://scikit-learn.org/dev/developers/contributing.html#pull-request-checklist
+
+📋 If your PR is likely to affect users, you will need to add a changelog entry
+describing your ...","This PR enhances the `unit-tests` GitHub Actions workflow by adding `schedule` (nightly) and `workflow_dispatch` (manual) triggers. For these new run types, it introduces a step to set `SKLEARN_TESTS_GLOBAL_RANDOM_SEED` to a random value. Additionally, it integrates an `update-tracker` job that automatically creates or updates a tracking issue if the `unit-tests` job fails during scheduled or manual runs. A minor adjustment was made in `maint_tools/update_tracking_issue.py` to include `is:issue` in the GitHub issue search query."
+32835,MNT Use Pyodide 0.29 version to avoid micropip error inside JupyterLite,Update Pyodide to 0.29.0 for JupyterLite,"Fix #32833.
+
+Tested locally this works fine. Let's see if CI has something to say about it. Full disclosure: I don't remember whether the JupyterLite in CircleCI artifacts is functional or not ...
+
+Quickly looking at the Pyodide [0.28](https://blog.pyodide.org/posts/0.28-release/) and [0.29](https://blog.pyodide.org/posts/0.29-release/) blog posts, I don't think there is anything unexpected that should break a lot of notebooks but I may try a few just to double-check.","This PR updates the Pyodide version used by the JupyterLite kernel extension from v0.27.2 to v0.29.0. It modifies the `pyodideUrl` in `doc/jupyter-lite.json` to point to the newer Pyodide CDN, addressing issue #32833."
+32422,"FEA Add array API support for brier_score_loss, log_loss, d2_brier_score and d2_log_loss_score",Add Array API Support for Brier and Log Loss Metrics,"<!--
+🙌 Thanks for contributing a pull request!
+
+👀 Please ensure you have taken a look at the contribution guidelines:
+https://github.com/scikit-learn/scikit-learn/blob/main/CONTRIBUTING.md
+
+✅ In particular following the pull request checklist will increase the likelihood
+of having maintainers review your PR:
+https://scikit-learn.org/dev/developers/contributing.html#pull-request-checklist
+
+📋 If your PR is likely to affect users, you will need to add a changelog entry
+describing your PR...","This PR introduces Array API compatibility for `brier_score_loss`, `log_loss`, `d2_brier_score`, and `d2_log_loss_score`. It refactors internal validation and loss calculation methods to use Array API functions (`xp.max`, `xp.min`, `xp.sum`, `xp.clip`, `xp.stack`, etc.) instead of NumPy. New helper functions, `_one_hot_encoding_multiclass_target` and `_one_hot_encoding_binary_target`, are added for consistent target encoding. `sample_weight` handling is updated using `ensure_common_namespace_device`, and comprehensive tests cover binary, multiclass, and multilabel scenarios, including string targets."
+32831,DOC Add HTML repr related PR to existing changelog,Add missing PR reference for HTML repr parameters to changelog,"Looking at the changelog and release highlights #30763 is not mentioned. Since this is the one that adds parameters to HTML repr, this is a bit of a shame.
+
+For completeness:
+- this way is a bit hacky but works fine: you add manually a `:pr:` with the right PR and the second PR is based on the number inside the filename. I noticed @lorentzenchr did it and that's actually a good idea!
+- I think towncrier has a way to do something similar where you need to add the exact same changelog text in ...","This PR adds a missing reference to PR #30763, which introduced parameters to the HTML representation of estimators, in the `doc/whats_new/upcoming_changes/sklearn.utils/31564.enhancement.rst` changelog entry. It ensures the enhancement is properly linked."
+26417,Upload nightly built wheels to scientific-python-nightly-wheels,Update nightly wheels to scientific-python-nightly-wheels,"## Context:
+
+https://github.com/scientific-python/specs/pull/185
+
+## Motivation for the change to the new repo:
+
+https://github.com/scikit-learn/scikit-learn/pull/26417#issuecomment-1559870610","This PR updates all references to the Anaconda organization for nightly builds from 'scipy-wheels-nightly' to 'scientific-python-nightly-wheels'. Changes include updating `--find-links` in `.binder/requirements.txt`, `dev_anaconda_url` in `build_tools/azure/install.sh`, `ANACONDA_ORG` in `build_tools/github/upload_anaconda.sh`, and the installation instructions in `doc/developers/advanced_installation.rst`."
+32827,FIX: move_to should handle BufferError and ValueError to support PyTorch 2.9 with array API enabled,Fix: move_to compatibility with PyTorch 2.9 and NumPy 2.3,"This fixes `move_to` (introduced in #31829) to make it work with PyTorch 2.9 and NumPy 2.3:
+
+- we need to catch `BufferError` as per the [`__dlpack__` spec](https://data-apis.org/array-api/latest/API_specification/generated/array_api.array.__dlpack__.html#:~:text=dl_device,-(Optional)
+- we also need to catch `ValuError` (at least for now) because of https://github.com/numpy/numpy/issues/30341. 
+
+
+I tested locally, and this fixes our test failures with PyTorch 2.9.1 (see https://github.com/...","This PR fixes the `move_to` function to ensure compatibility with PyTorch 2.9 and NumPy 2.3. The change modifies the `except` block in `sklearn/utils/_array_api.py` to additionally catch `BufferError`, as per the `__dlpack__` specification, and `ValueError`, which addresses a specific issue in NumPy (numpy/numpy#30341). This prevents conversion failures when using the array API with newer versions of these libraries."
+32804,CI Make linting bot comment only on failure,Refactor Linter Bot: PyGithub and Conditional Commenting,"<!--
+🙌 Thanks for contributing a pull request!
+
+👀 Please ensure you have taken a look at the contribution guidelines:
+https://github.com/scikit-learn/scikit-learn/blob/main/CONTRIBUTING.md
+
+✅ In particular following the pull request checklist will increase the likelihood
+of having maintainers review your PR:
+https://scikit-learn.org/dev/developers/contributing.html#pull-request-checklist
+
+📋 If your PR is likely to affect users, you will need to add a changelog entry
+describing your PR...","Refactored the linter bot's comment system to only post comments when linting fails and automatically remove them upon success. The `build_tools/get_comment.py` script was updated to replace direct HTTP requests with the `PyGithub` library for all GitHub API interactions, including comment management and label updates. The `bot-lint-comment.yml` workflow was updated to install `PyGithub`."
+32792,DOC Update Contributing intro and Ways to contribute,Refine Contributing Guide for New Contributors,"#### Reference Issues/PRs
+Follow up to #32715, specifically see https://github.com/scikit-learn/scikit-learn/pull/32715#discussion_r2538148882
+
+#### What does this implement/fix? Explain your changes.
+
+* Removes the line ""and everyone is welcome to contribute""
+* Make it more clear that this is not a good place to start for people new contributors
+
+#### Any other comments?
+
+I understand that this change may be a bit controversial and I am happy to discuss and iterate, this is a first at...","This PR refines `doc/developers/contributing.rst` to clarify expectations for new contributors. It removes the general invitation ""and everyone is welcome to contribute"" and rephrases the project's community effort. The update emphasizes that code contributions typically require advanced skills, guiding new contributors towards foundational activities like issue investigation, documentation improvements, and pull request reviews before attempting direct code contributions. The structure of the ""Ways to contribute"" and ""New Contributors"" sections is also significantly revised."
